@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PBT-NCA · Evolving Many Worlds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #080a0f;
+    --bg2: #0d1018;
+    --bg3: #111520;
+    --card: #12151f;
+    --border: rgba(255,255,255,0.07);
+    --accent: #4fffb0;
+    --accent2: #ff6b6b;
+    --accent3: #ffd93d;
+    --accent4: #6bceff;
+    --text: #e8eaf0;
+    --muted: #6b7280;
+    --mono: 'Space Mono', monospace;
+    --serif: 'DM Serif Display', serif;
+    --sans: 'DM Sans', sans-serif;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE TEXTURE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.4;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── GRADIENT BLOB BACKGROUND ── */
+  .bg-blobs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+  }
+  .blob-1 { width: 600px; height: 600px; background: #4fffb0; top: -200px; left: -200px; }
+  .blob-2 { width: 500px; height: 500px; background: #6bceff; top: 40%; right: -150px; }
+  .blob-3 { width: 400px; height: 400px; background: #ff6b6b; bottom: 10%; left: 30%; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(8, 10, 15, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--accent); }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 7rem 0 5rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    border: 1px solid rgba(79, 255, 176, 0.3);
+    padding: 0.35rem 0.9rem;
+    border-radius: 2px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+  }
+  .hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    line-height: 1.15;
+    max-width: 1200px;
+    margin: 0 auto 1.2rem;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-subtitle {
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    color: var(--accent3);
+    letter-spacing: 0.12em;
+    margin-bottom: 2.5rem;
+    text-transform: uppercase;
+  }
+  .authors {
+    font-size: 1rem;
+    color: var(--muted);
+    margin-bottom: 0.6rem;
+  }
+  .authors strong { color: var(--text); font-weight: 500; }
+  .affiliations {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 2.8rem;
+    font-family: var(--mono);
+  }
+
+  .hero-links { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-bottom: 4rem; }
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 0.7rem 1.6rem;
+    border-radius: 2px;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #060810;
+    font-weight: 700;
+  }
+  .btn-primary:hover { background: #7fffca; transform: translateY(-2px); }
+  .btn-outline {
+    border: 1px solid var(--border);
+    color: var(--muted);
+    background: rgba(255,255,255,0.03);
+  }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+  /* ── FEATURED GIF STRIP ── */
+  .featured-strip {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 5rem;
+    border-radius: 4px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .featured-strip img {
+    flex: 1;
+    width: 0;
+    min-width: 0;
+    height: 130px;
+    object-fit: cover;
+    display: block;
+    transition: flex 0.5s ease, filter 0.3s;
+    filter: saturate(1.1);
+  }
+  .featured-strip img:hover { flex: 3; }
+
+  /* ── ABSTRACT ── */
+  .abstract-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .abstract-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .abstract-text { grid-column: 1 / -1; }
+  .abstract-text { font-size: 0.97rem; color: #b0b8c8; line-height: 1.85; }
+  .abstract-text p + p { margin-top: 1rem; }
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 1.4rem 1.2rem;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+  .stat-card.green::before  { background: var(--accent); }
+  .stat-card.red::before    { background: var(--accent2); }
+  .stat-card.yellow::before { background: var(--accent3); }
+  .stat-card.blue::before   { background: var(--accent4); }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: 2.2rem;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+  .stat-card.green  .stat-num { color: var(--accent); }
+  .stat-card.red    .stat-num { color: var(--accent2); }
+  .stat-card.yellow .stat-num { color: var(--accent3); }
+  .stat-card.blue   .stat-num { color: var(--accent4); }
+  .stat-label { font-size: 0.78rem; color: var(--muted); font-family: var(--mono); letter-spacing: 0.05em; }
+
+  /* ── VIDEO / GIF SECTIONS ── */
+  .gallery-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: 2rem;
+    margin-bottom: 0.6rem;
+    letter-spacing: -0.01em;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 0.92rem;
+    max-width: none;
+    margin-bottom: 3rem;
+    line-height: 1.7;
+  }
+
+  /* 2-col grid */
+  .gif-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  /* 3-col grid */
+  .gif-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+  /* wide + narrow */
+  .gif-grid-featured { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; }
+  /* single wide */
+  .gif-single { max-width: 720px; }
+
+  .gif-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    cursor: default;
+  }
+  .gif-card:hover {
+    border-color: rgba(79, 255, 176, 0.25);
+    transform: translateY(-3px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  }
+  .gif-card img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .gif-card.wide img { aspect-ratio: 4/3; }
+  .gif-card.tall img { aspect-ratio: 3/4; }
+  .gif-caption {
+    padding: 1rem 1.2rem;
+  }
+  .gif-caption .tag {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .tag-green  { color: var(--accent); }
+  .tag-red    { color: var(--accent2); }
+  .tag-yellow { color: var(--accent3); }
+  .tag-blue   { color: var(--accent4); }
+  .tag-purple { color: #c084fc; }
+  .tag-pink   { color: #f472b6; }
+  .gif-caption h3 {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+    color: var(--text);
+  }
+  .gif-caption p { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── TIMELINE SECTION ── */
+  .timeline-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .timeline-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+  }
+  .timeline-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+  }
+  .timeline-card:hover {
+    border-color: rgba(107, 206, 255, 0.3);
+    transform: translateY(-2px);
+  }
+  .timeline-card img {
+    width: 100%;
+    display: block;
+    aspect-ratio: 1;
+    object-fit: cover;
+  }
+  .timeline-meta {
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    border-top: 1px solid var(--border);
+  }
+  .meta-iter {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent4);
+    letter-spacing: 0.1em;
+  }
+  .meta-name {
+    font-size: 0.82rem;
+    color: var(--text);
+    font-weight: 500;
+  }
+  .fitness-figure-card {
+    background: linear-gradient(180deg, rgba(18, 21, 31, 0.96), rgba(13, 16, 24, 0.96));
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.1rem;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.28);
+  }
+  .fitness-figure-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.9rem;
+  }
+  .fitness-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    background: rgba(79,255,176,0.08);
+    border: 1px solid rgba(79,255,176,0.18);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .fitness-badge::before {
+    content: '';
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 10px currentColor;
+  }
+  .fitness-figure-link {
+    color: var(--accent4);
+    text-decoration: none;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .fitness-figure-link:hover { color: #9edfff; }
+  .fitness-figure-stage {
+    position: relative;
+    aspect-ratio: 1000 / 520;
+    background:
+      radial-gradient(circle at top left, rgba(79,255,176,0.06), transparent 30%),
+      radial-gradient(circle at bottom right, rgba(107,206,255,0.10), transparent 38%),
+      rgba(6, 9, 14, 0.96);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .fitness-chart,
+  .fitness-events,
+  .fitness-loading,
+  .fitness-fallback {
+    position: absolute;
+    inset: 0;
+  }
+  .fitness-chart {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .fitness-grid-line {
+    stroke: rgba(255,255,255,0.12);
+    stroke-width: 1;
+    stroke-dasharray: 3 6;
+  }
+  .fitness-axis-line {
+    stroke: rgba(255,255,255,0.3);
+    stroke-width: 1.25;
+  }
+  .fitness-axis-text,
+  .fitness-caption-note {
+    fill: var(--muted);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+  }
+  .fitness-axis-label {
+    fill: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .fitness-band {
+    fill: rgba(107,206,255,0.16);
+    stroke: none;
+  }
+  .fitness-line {
+    fill: none;
+    stroke: var(--accent4);
+    stroke-width: 4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 18px rgba(107,206,255,0.22));
+  }
+  .fitness-leader {
+    stroke: rgba(255,255,255,0.45);
+    stroke-width: 1.2;
+    stroke-dasharray: 4 5;
+  }
+  .fitness-point {
+    fill: var(--accent4);
+    stroke: rgba(8, 10, 15, 0.9);
+    stroke-width: 2;
+  }
+  .fitness-events {
+    pointer-events: none;
+  }
+  .fitness-event {
+    position: absolute;
+    transform: translate(-50%, -50%) scale(0.88);
+    opacity: 0;
+    transition: transform 0.45s ease, opacity 0.45s ease;
+  }
+  .fitness-event.is-visible {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  .fitness-event-card {
+    width: 100px;
+    overflow: hidden;
+    border-radius: 4px;
+    background: rgba(12, 15, 22, 0.94);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 18px 32px rgba(0,0,0,0.38);
+    backdrop-filter: blur(10px);
+  }
+  .fitness-event-card img {
+    width: 100%;
+    aspect-ratio: 1;
+    display: block;
+    object-fit: cover;
+  }
+  .fitness-event-label {
+    display: block;
+    padding: 0.45rem 0.5rem 0.5rem;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    line-height: 1.45;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .fitness-loading {
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    background: linear-gradient(180deg, rgba(8, 10, 15, 0.18), rgba(8, 10, 15, 0.32));
+    transition: opacity 0.25s ease;
+  }
+  .fitness-loading.is-hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .fitness-fallback {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .figure-note {
+    margin-top: 0.9rem;
+    color: var(--muted);
+    font-size: 0.8rem;
+    line-height: 1.7;
+  }
+
+  /* ── METHOD SECTION ── */
+  .method-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .method-grid { display: grid; grid-template-columns: 0.5fr 1.5fr; gap: 3rem; align-items: start; }
+  .method-steps { display: flex; flex-direction: column; gap: 1.5rem; }
+  .step {
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+  }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    background: rgba(79,255,176,0.08);
+    border: 1px solid rgba(79,255,176,0.2);
+    width: 2rem; height: 2rem;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+    margin-top: 0.2rem;
+  }
+  .step-body h4 {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--text);
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .step-body p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+
+  .pbt-overview-card {
+    background: linear-gradient(180deg, rgba(18, 21, 31, 0.96), rgba(13, 16, 24, 0.96));
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow: hidden;
+  }
+  .pbt-overview-title {
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent4);
+  }
+  .pbt-overview-note {
+    color: var(--muted);
+    font-size: 0.82rem;
+    line-height: 1.65;
+  }
+  .pbt-diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+  .pbt-meta-label {
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text);
+    padding-bottom: 0.35rem;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+  }
+  .pbt-row {
+    display: grid;
+    grid-template-columns: 6rem minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: start;
+  }
+  .pbt-stage-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding-top: 0.35rem;
+  }
+  .pbt-stage-body {
+    min-width: 0;
+  }
+  .pbt-world-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+  .pbt-world {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.02);
+    min-width: 0;
+  }
+  .pbt-world-thumb {
+    aspect-ratio: 1;
+    background: rgba(255,255,255,0.03);
+    display: grid;
+    place-items: center;
+  }
+  .pbt-world-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .pbt-world-meta {
+    padding: 0.45rem 0.5rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .pbt-world-name,
+  .pbt-world-rank {
+    font-family: var(--mono);
+    font-size: 0.56rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.35;
+  }
+  .pbt-world-name { color: var(--text); }
+  .pbt-world-rank { color: var(--muted); }
+  .pbt-world.elite { border-color: rgba(79,255,176,0.45); background: rgba(79,255,176,0.07); }
+  .pbt-world.mid { border-color: rgba(255,217,61,0.35); background: rgba(255,217,61,0.06); }
+  .pbt-world.bottom { border-color: rgba(255,107,107,0.35); background: rgba(255,107,107,0.06); }
+  .pbt-world.newworld { border-color: rgba(107,206,255,0.4); background: rgba(107,206,255,0.07); }
+  .pbt-world.dead {
+    border-style: dashed;
+    border-color: rgba(255,255,255,0.22);
+    background: rgba(255,255,255,0.03);
+  }
+  .pbt-world.dead .pbt-world-thumb::before {
+    content: 'discarded';
+    font-family: var(--mono);
+    font-size: 0.54rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .pbt-arrow-divider {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding-left: 6.9rem;
+  }
+  .pbt-arrow-divider::before,
+  .pbt-arrow-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.18), transparent);
+  }
+  .pbt-archive {
+    border: 1px solid rgba(79,255,176,0.28);
+    background: rgba(79,255,176,0.06);
+    border-radius: 4px;
+    padding: 0.85rem 1rem;
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+  .pbt-archive-title,
+  .pbt-legend-item span:first-child,
+  .pbt-offspring-node-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .pbt-archive-title { color: var(--accent); }
+  .pbt-archive-copy { color: var(--muted); font-size: 0.8rem; line-height: 1.55; }
+  .pbt-inline-formula {
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 0.76rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .pbt-offspring-flow {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.55rem;
+    align-items: center;
+  }
+  .pbt-offspring-node {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    min-height: 4.3rem;
+    padding: 0.75rem 0.55rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.25rem;
+    text-align: center;
+    background: rgba(255,255,255,0.025);
+  }
+  .pbt-offspring-node strong {
+    color: var(--text);
+    font-size: 0.82rem;
+    font-weight: 500;
+  }
+  .pbt-offspring-node p {
+    color: var(--muted);
+    font-size: 0.72rem;
+    line-height: 1.45;
+  }
+  .pbt-offspring-node.copy { border-color: rgba(79,255,176,0.35); }
+  .pbt-offspring-node.crossover { border-color: rgba(255,163,26,0.35); }
+  .pbt-offspring-node.mutate { border-color: rgba(107,206,255,0.35); }
+  .pbt-offspring-node.perturb { border-color: rgba(192,132,252,0.35); }
+  .pbt-offspring-node.child { border-color: rgba(107,206,255,0.45); background: rgba(107,206,255,0.08); }
+  .pbt-children-note {
+    color: var(--muted);
+    font-size: 0.76rem;
+    line-height: 1.55;
+    padding-top: 0.15rem;
+  }
+  .pbt-legend {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+  .pbt-legend-item {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(255,255,255,0.02);
+    color: var(--muted);
+    font-size: 0.72rem;
+  }
+  .pbt-legend-swatch {
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .pbt-legend-swatch.elite { background: rgba(79,255,176,0.18); border-color: rgba(79,255,176,0.45); }
+  .pbt-legend-swatch.mid { background: rgba(255,217,61,0.18); border-color: rgba(255,217,61,0.35); }
+  .pbt-legend-swatch.bottom { background: rgba(255,107,107,0.18); border-color: rgba(255,107,107,0.35); }
+  .pbt-legend-swatch.newworld { background: rgba(107,206,255,0.18); border-color: rgba(107,206,255,0.45); }
+  .pbt-legend-swatch.dead { background: rgba(255,255,255,0.06); border-style: dashed; }
+  .pbt-overview-card [data-step] {
+    opacity: 0;
+    transform: translateY(14px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+  }
+  .pbt-overview-card [data-step].is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── CITATION ── */
+  .citation-section {
+    padding: 5rem 0;
+    border-top: 1px solid var(--border);
+    position: relative; z-index: 1;
+  }
+  .cite-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.8rem 2rem;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.9;
+    position: relative;
+    overflow: hidden;
+  }
+  .cite-box::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent4));
+  }
+  .cite-key { color: var(--accent4); }
+  .cite-value { color: var(--text); }
+  .copy-btn {
+    position: absolute;
+    top: 1rem; right: 1rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    padding: 0.4rem 0.8rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 0;
+    position: relative; z-index: 1;
+  }
+  .footer-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-logo {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+  }
+  .footer-text { font-size: 0.8rem; color: var(--muted); font-family: var(--mono); }
+  .footer-links { display: flex; gap: 1.5rem; }
+  .footer-links a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 0.08em;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--accent); }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--border), transparent);
+    margin: 1rem 0;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .abstract-grid, .gif-grid-2, .gif-grid-featured, .method-grid { grid-template-columns: 1fr; }
+    .gif-grid-3, .timeline-grid { grid-template-columns: 1fr 1fr; }
+    .stats-grid { grid-template-columns: 1fr 1fr; }
+    .featured-strip { display: none; }
+    .fitness-figure-card { padding: 0.85rem; }
+    .fitness-event-card { width: 82px; }
+    .fitness-event-label { font-size: 0.5rem; padding: 0.35rem 0.4rem 0.42rem; }
+    .pbt-row { grid-template-columns: 1fr; }
+    .pbt-stage-label { padding-top: 0; }
+    .pbt-arrow-divider { padding-left: 0; }
+    .pbt-world-row, .pbt-offspring-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .pbt-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 480px) {
+    .gif-grid-3, .timeline-grid { grid-template-columns: 1fr; }
+    .fitness-figure-toolbar { align-items: flex-start; }
+    .fitness-figure-stage { aspect-ratio: 1 / 1.15; }
+    .fitness-event-card { width: 68px; }
+    .fitness-event-label { display: none; }
+    .pbt-world-row, .pbt-offspring-flow, .pbt-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero > * { animation: fadeUp 0.7s ease both; }
+  .hero > *:nth-child(1) { animation-delay: 0.05s; }
+  .hero > *:nth-child(2) { animation-delay: 0.15s; }
+  .hero > *:nth-child(3) { animation-delay: 0.25s; }
+  .hero > *:nth-child(4) { animation-delay: 0.3s; }
+  .hero > *:nth-child(5) { animation-delay: 0.35s; }
+  .hero > *:nth-child(6) { animation-delay: 0.4s; }
+  .hero > *:nth-child(7) { animation-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">PBT-NCA</a>
+  <ul class="nav-links">
+    <li><a href="#emergent">Emergent Dynamics</a></li>
+    <li><a href="#timeline">Evolution Timeline</a></li>
+    <li><a href="#method">Method</a></li>
+    <li><a href="#citation">Cite</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1><em>Evolving Many Worlds</em><br/>Open-Ended Discovery in</br>Petri Dish NCA<br/>via Population-Based Training</h1>
+    <p class="hero-subtitle">Open-Ended Discovery &nbsp;·&nbsp; Neural Cellular Automata &nbsp;·&nbsp; Emergent Dynamics</p>
+    <p class="authors">
+      <strong>Uljad Berdica</strong><sup>1*</sup>,&nbsp;
+      <strong>Jakob Foerster</strong><sup>1</sup>,&nbsp;
+      <strong>Frank Hutter</strong><sup>4,3,2</sup>&nbsp; and&nbsp;
+      <strong>Arber Zela</strong><sup>2*</sup>
+    </p>
+    <p class="affiliations">
+      <sup>1</sup>FLAIR, University of Oxford &nbsp;·&nbsp;
+      <sup>2</sup>ELLIS Institute Tübingen &nbsp;·&nbsp;
+      <sup>3</sup>University of Freiburg &nbsp;·&nbsp;
+      <sup>4</sup>Prior Labs
+    </p>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="https://github.com/arberzela/pbt-nca" target="_blank">↗ Code on GitHub</a>
+      <a class="btn btn-outline" href="https://arxiv.org" target="_blank">arXiv Preprint</a>
+      <a class="btn btn-outline" href="#emergent">Explore Results ↓</a>
+    </div>
+
+    <!-- FEATURED STRIP -->
+    <div class="featured-strip">
+      <img src="gifs/shooter.gif"            alt="Shooter" />
+      <img src="gifs/glider.gif"             alt="Glider" />
+      <img src="gifs/amoeba.gif"             alt="Amoeba" />
+      <img src="gifs/colony.gif"             alt="Colony" />
+      <img src="gifs/spaceship_motherboard.gif" alt="Spaceship" />
+      <img src="gifs/ants.gif"               alt="Ants" />
+      <img src="gifs/jaxlife.gif"            alt="JAX Life" />
+    </div>
+  </div>
+</section>
+
+<!-- ABSTRACT -->
+<section class="abstract-section" id="abstract">
+  <div class="container">
+    <div class="section-label">Abstract</div>
+    <div class="abstract-grid">
+      <div class="abstract-text">
+        <p>
+          We introduce <strong>PBT-NCA</strong>, a meta-optimization framework that evolves Petri Dish Neural Cellular Automata (PD-NCAs) 
+          using Population-Based Training (PBT) with a non-stationary fitness signal rewarding novelty both within each
+          substrate and across all of them. Driven purely by competitive evolutionary pressure, the
+          system spontaneously generates a plethora of emergent lifelike phenomena with behavioral
+          and structural novelty over extended horizons—a sign of true open-endedness.
+          The substrate autonomously discovers diverse morphological survival strategies: highly
+          regular coordinated periodic movements; spore-like scattering; and symbiotic partitioning
+          where stable macro-structures gradually encapsulate smaller ones. By actively avoiding
+          monocultures and dead states, PBT-NCA maintains effective complexity precisely at the
+          <em>"edge of chaos"</em>.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EMERGENT BEHAVIORS -->
+<section class="gallery-section" id="emergent">
+  <div class="container">
+    <div class="section-label">Emergent Dynamics</div>
+    <h2 class="section-title">Lifelike Phenomena from Competitive Pressure</h2>
+    <p class="section-desc">
+      Without any handcrafted targets, PBT-NCA spontaneously evolves a diverse ecosystem of
+      structures—shooters, gliders, amoebas, colonies, and spaceships—each arising from pure
+      multi-agent competition.
+    </p>
+
+    <!-- Row 1: Featured behaviors -->
+    <div class="gif-grid-featured" style="margin-bottom: 1.5rem;">
+      <div class="gif-card wide">
+        <img src="gifs/amoeba.gif" alt="Amoeba" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-green">Meta-iter 230 · 7 NCAs</div>
+          <h3>Amoeba</h3>
+          <p>Fluid, shape-shifting macro-structures that migrate across the substrate with coordinated, differentiated cell behavior—mirroring motility-induced phase separation.</p>
+        </div>
+      </div>
+      <div class="gif-card">
+        <img src="gifs/shooter.gif" alt="Shooter" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-red">Meta-iter 20 · 3 NCAs</div>
+          <h3>Shooter</h3>
+          <p>Directed projectile emission from stable territorial clusters—analogous to glider-gun structures in classical CA literature.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Three behaviors -->
+    <div class="gif-grid-3" style="margin-bottom: 1.5rem;">
+      <div class="gif-card">
+        <img src="gifs/glider.gif" alt="Glider" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-yellow">Meta-iter 460 · 7 NCAs</div>
+          <h3>Glider</h3>
+          <p>Persistent traveling waves that self-replicate across the grid without a fixed template—a universal marker of open-ended CA systems.</p>
+        </div>
+      </div>
+      <div class="gif-card">
+        <img src="gifs/colony.gif" alt="Colony" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-blue">Emerging · 7 NCAs</div>
+          <h3>Colony</h3>
+          <p>Distributed cluster networks that exhibit stable territorial partitioning while maintaining active intra-colony communication via cell exchange.</p>
+        </div>
+      </div>
+      <div class="gif-card">
+        <img src="gifs/ants.gif" alt="Ant Colony" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-green">Meta-iter 370 · 3 NCAs</div>
+          <h3>Ant Colony</h3>
+          <p>Decentralized foraging-like behavior: agents follow stigmergic-style pheromone trails emerging purely from local NCA gradient dynamics.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: More behaviors -->
+    <div class="gif-grid-2">
+      <div class="gif-card wide">
+        <img src="gifs/spaceship_motherboard.gif" alt="Spaceship / Motherboard" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-purple">Meta-iter 20 · 3 NCAs (Extended Search Space)</div>
+          <h3>Spaceship / Motherboard</h3>
+          <p>Highly structured, periodically replicating entities with internal substructure—reminiscent of von Neumann universal constructors but arising from gradient-based learning alone.</p>
+        </div>
+      </div>
+      <div class="gif-card wide">
+        <img src="gifs/jaxlife.gif" alt="JAXLife" loading="lazy" />
+        <div class="gif-caption">
+          <div class="tag tag-pink">JAX Implementation</div>
+          <h3>JAXLife Dynamics</h3>
+          <p>Full-scale simulation harnessing JAX-accelerated NCA rollouts, demonstrating the compute efficiency enabling 500 meta-iterations with 30 parallel worlds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TIMELINE SECTION -->
+<section class="timeline-section" id="timeline">
+  <div class="container">
+    <div class="section-label">Evolution Timeline</div>
+    <h2 class="section-title">Open-Ended Novelty Generation Over Meta-Iterations</h2>
+    <p class="section-desc">
+      This animated figure recreates the fitness plot from the paper: the smoothed population
+      fitness grows across meta-iterations while representative emergent worlds appear at the
+      moments they enter the evolutionary record.
+    </p>
+    <figure class="fitness-figure-card">
+      <div class="fitness-figure-toolbar">
+        <span class="fitness-badge">Animated Figure</span>
+        <a class="fitness-figure-link" href="fitness_frames_7/fitness_with_frames_7.pdf" target="_blank">View Original PDF ↗</a>
+      </div>
+      <div class="fitness-figure-stage" id="fitness-figure-stage">
+        <svg class="fitness-chart" viewBox="0 0 1000 520" aria-hidden="true">
+          <defs>
+            <clipPath id="fitness-clip-path">
+              <rect id="fitness-clip-rect" x="0" y="0" width="0" height="520"></rect>
+            </clipPath>
+          </defs>
+          <g id="fitness-grid"></g>
+          <line class="fitness-axis-line" x1="72" y1="466" x2="976" y2="466"></line>
+          <line class="fitness-axis-line" x1="72" y1="32" x2="72" y2="466"></line>
+          <g clip-path="url(#fitness-clip-path)">
+            <path id="fitness-band" class="fitness-band"></path>
+            <path id="fitness-line" class="fitness-line"></path>
+            <g id="fitness-annotations"></g>
+          </g>
+          <g id="fitness-labels"></g>
+        </svg>
+        <div class="fitness-events" id="fitness-events"></div>
+        <div class="fitness-loading" id="fitness-loading">Loading animated fitness figure…</div>
+      </div>
+      <figcaption class="figure-note">
+        PBT-NCA evolving a population of 30 PD-NCAs worlds, each with 7 NCA agents competing for territory. We plot the fitness function over meta-iterations and rollouts from the highest scoring world. Novel dynamics emerge from agentic competition in an open-ended progression.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- METHOD -->
+<section class="method-section" id="method">
+  <div class="container">
+    <div class="section-label">Method Overview</div>
+    <h2 class="section-title">PBT-NCA Framework</h2>
+    <p class="section-desc">
+      A meta-optimization loop that transforms standard population-based training into an
+      open-ended regime discovery engine by replacing stationary fitness with novelty-driven
+      selection pressure operating at two timescales.
+    </p>
+
+    <div class="method-grid">
+      <div class="method-steps">
+        <div class="step">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h4>Rollout &amp; Score</h4>
+            <p>Each of the <strong>P = 30</strong> worlds is rolled out for T<sub>w</sub> inner steps. Agents update via gradient-based learning while competing on the shared grid. Trajectories are scored by the dual-novelty fitness.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h4>Archive Update (FIFO)</h4>
+            <p>Top-<em>m</em> behavioral descriptors—species occupancy statistics (μ, σ, δ, entropy, alive-mass change)—are appended to a bounded FIFO archive. Archive novelty is computed as k-NN distance (k = 8) in descriptor space.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h4>DINOv2 Visual Diversity</h4>
+            <p>Each frame is encoded by a frozen <strong>DINOv2</strong> encoder. Per-world diversity is the median cosine distance to all other worlds at the same timestep, averaged over the rollout—rewarding novel morphology beyond what handcrafted descriptors capture.</p>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h4>Exploit–Explore Replacement</h4>
+            <p>Every K meta-iterations, the lowest-fitness worlds are replaced by <strong>Lamarckian copies</strong> of elite parents: weights, optimizer state, and ecological context are inherited, then crossover, mutation, and Gaussian weight perturbation are applied.</p>
+          </div>
+        </div>
+      </div>
+
+      <figure class="pbt-overview-card" id="pbt-overview-card">
+        <div class="pbt-overview-title" data-step="1">Animated Meta-Iteration Overview</div>
+        <div class="pbt-overview-note" data-step="1">
+          A browser-native walkthrough of one PBT-NCA meta-iteration: worlds are rolled out and ranked, top descriptors enter the archive, low performers are replaced, and elite copies generate new children for the next round.
+        </div>
+
+        <div class="pbt-diagram">
+          <div class="pbt-meta-label" data-step="1">Meta-iteration t</div>
+
+          <div class="pbt-row" data-step="2">
+            <div class="pbt-stage-label">1. Rollout &amp; Score</div>
+            <div class="pbt-stage-body">
+              <div class="pbt-world-row">
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/amoeba.gif" alt="World W1 elite rollout" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W1</span><span class="pbt-world-rank">Elite</span></div>
+                </article>
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/spaceship_motherboard.gif" alt="World W2 elite rollout" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W2</span><span class="pbt-world-rank">Elite</span></div>
+                </article>
+                <article class="pbt-world mid">
+                  <div class="pbt-world-thumb"><img src="gifs/colony.gif" alt="World W3 mid-rank rollout" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W3</span><span class="pbt-world-rank">Mid-rank</span></div>
+                </article>
+                <article class="pbt-world bottom">
+                  <div class="pbt-world-thumb"><img src="gifs/60.gif" alt="World W4 low-rank rollout" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W4</span><span class="pbt-world-rank">Low-rank</span></div>
+                </article>
+                <article class="pbt-world bottom">
+                  <div class="pbt-world-thumb"><img src="gifs/110.gif" alt="World W5 low-rank rollout" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W5</span><span class="pbt-world-rank">Low-rank</span></div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="pbt-arrow-divider" data-step="3">rank by novelty-driven fitness</div>
+
+          <div class="pbt-row" data-step="4">
+            <div class="pbt-stage-label">2. Archive Update</div>
+            <div class="pbt-stage-body">
+              <div class="pbt-archive">
+                <div class="pbt-archive-title">FIFO archive update</div>
+                <div class="pbt-archive-copy">Add the top-<em>m</em> behavioral descriptors from the highest-scoring worlds: <span class="pbt-inline-formula">𝒜 ← 𝒜 ∪ {d₁, d₂}</span> while maintaining a bounded first-in, first-out memory.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pbt-arrow-divider" data-step="5">replace the lowest performers</div>
+
+          <div class="pbt-row" data-step="6">
+            <div class="pbt-stage-label">3. Exploit–Explore</div>
+            <div class="pbt-stage-body">
+              <div class="pbt-world-row">
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/amoeba.gif" alt="World W1 kept" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W1</span><span class="pbt-world-rank">Kept elite</span></div>
+                </article>
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/spaceship_motherboard.gif" alt="World W2 kept" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W2</span><span class="pbt-world-rank">Kept elite</span></div>
+                </article>
+                <article class="pbt-world mid">
+                  <div class="pbt-world-thumb"><img src="gifs/colony.gif" alt="World W3 kept" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W3</span><span class="pbt-world-rank">Kept mid</span></div>
+                </article>
+                <article class="pbt-world dead">
+                  <div class="pbt-world-thumb"></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W4</span><span class="pbt-world-rank">Discarded</span></div>
+                </article>
+                <article class="pbt-world dead">
+                  <div class="pbt-world-thumb"></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W5</span><span class="pbt-world-rank">Discarded</span></div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="pbt-row" data-step="7">
+            <div class="pbt-stage-label">Create Offspring</div>
+            <div class="pbt-stage-body">
+              <div class="pbt-offspring-flow">
+                <div class="pbt-offspring-node copy">
+                  <span class="pbt-offspring-node-label">Copy</span>
+                  <strong>Elite parent</strong>
+                  <p>Clone weights, optimizer state, and context.</p>
+                </div>
+                <div class="pbt-offspring-node crossover">
+                  <span class="pbt-offspring-node-label">Crossover</span>
+                  <strong>Mix parents</strong>
+                  <p>Combine strong lineages during exploit.</p>
+                </div>
+                <div class="pbt-offspring-node mutate">
+                  <span class="pbt-offspring-node-label">Mutate</span>
+                  <strong>Explore</strong>
+                  <p>Alter hyperparameters and world-level choices.</p>
+                </div>
+                <div class="pbt-offspring-node perturb">
+                  <span class="pbt-offspring-node-label">Perturb</span>
+                  <strong>Weight noise</strong>
+                  <p>Apply Gaussian perturbations to diversify behavior.</p>
+                </div>
+                <div class="pbt-offspring-node child">
+                  <span class="pbt-offspring-node-label">Child</span>
+                  <strong>New worlds</strong>
+                  <p>Spawn replacements for the discarded worlds.</p>
+                </div>
+              </div>
+              <div class="pbt-children-note">Elite worlds seed new offsprings that inherit useful ecological context before crossover, mutation, and perturbation push them into unexplored regimes.</div>
+            </div>
+          </div>
+
+          <div class="pbt-meta-label" data-step="8">Meta-iteration t + 1</div>
+
+          <div class="pbt-row" data-step="9">
+            <div class="pbt-stage-label">Next Population</div>
+            <div class="pbt-stage-body">
+              <div class="pbt-world-row">
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/amoeba.gif" alt="World W1 next iteration" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W1</span><span class="pbt-world-rank">Elite</span></div>
+                </article>
+                <article class="pbt-world elite">
+                  <div class="pbt-world-thumb"><img src="gifs/spaceship_motherboard.gif" alt="World W2 next iteration" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W2</span><span class="pbt-world-rank">Elite</span></div>
+                </article>
+                <article class="pbt-world mid">
+                  <div class="pbt-world-thumb"><img src="gifs/colony.gif" alt="World W3 next iteration" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W3</span><span class="pbt-world-rank">Mid-rank</span></div>
+                </article>
+                <article class="pbt-world newworld">
+                  <div class="pbt-world-thumb"><img src="gifs/glider.gif" alt="World W4 prime child" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W4′</span><span class="pbt-world-rank">New child</span></div>
+                </article>
+                <article class="pbt-world newworld">
+                  <div class="pbt-world-thumb"><img src="gifs/ants.gif" alt="World W5 prime child" loading="lazy" /></div>
+                  <div class="pbt-world-meta"><span class="pbt-world-name">W5′</span><span class="pbt-world-rank">New child</span></div>
+                </article>
+              </div>
+            </div>
+          </div>
+
+          <div class="pbt-legend" data-step="10">
+            <div class="pbt-legend-item"><span class="pbt-legend-swatch elite"></span><span>Elite</span></div>
+            <div class="pbt-legend-item"><span class="pbt-legend-swatch mid"></span><span>Mid-rank</span></div>
+            <div class="pbt-legend-item"><span class="pbt-legend-swatch bottom"></span><span>Low-rank</span></div>
+            <div class="pbt-legend-item"><span class="pbt-legend-swatch newworld"></span><span>New child</span></div>
+            <div class="pbt-legend-item"><span class="pbt-legend-swatch dead"></span><span>Discarded</span></div>
+          </div>
+        </div>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- CITATION -->
+<section class="citation-section" id="citation">
+  <div class="container">
+    <div class="section-label">Citation</div>
+    <p style="font-size:0.9rem; color:var(--muted); margin-bottom:1.5rem; max-width: 600px;">If you find this work useful, please cite the paper:</p>
+    <div class="cite-box" id="bibtex">
+      <button class="copy-btn" onclick="copyBibtex()">Copy</button>
+<span class="cite-key">@inproceedings</span><span class="cite-value">{berdica2026pbtnca,</span><br/>
+&nbsp;&nbsp;<span class="cite-key">title</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="cite-value">{Evolving Many Worlds: Towards Open-Ended Discovery in Petri Dish NCA via Population-Based Training}</span><br/>
+&nbsp;&nbsp;<span class="cite-key">author</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="cite-value">{Berdica, Uljad and Foerster, Jakob and Hutter, Frank and Zela, Arber},</span><br/>
+&nbsp;&nbsp;<span class="cite-key">year</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;= <span class="cite-value">{2026}</span><br/>
+<span class="cite-value">}</span>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <span class="footer-logo">PBT-NCA</span>
+      <span class="footer-text">Equal contribution: Uljad Berdica &amp; Arber Zela · ALife 2026</span>
+      <div class="footer-links">
+        <a href="https://github.com/arberzela/pbt-nca" target="_blank">GitHub</a>
+        <a href="mailto:arber.zela@tue.ellis.eu">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script src="fitness_frames_7/fitness_data.js"></script>
+<script>
+function copyBibtex() {
+  const text = `@inproceedings{berdica2026pbtnca,
+  title     = {Evolving Many Worlds: Towards Open-Ended Discovery in Petri Dish NCA via Population-Based Training},
+  author    = {Berdica, Uljad and Foerster, Jakob and Hutter, Frank and Zela, Arber},
+  year      = {2026}
+}`;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    btn.style.color = 'var(--accent)';
+    btn.style.borderColor = 'var(--accent)';
+    setTimeout(() => {
+      btn.textContent = 'Copy';
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 2000);
+  });
+}
+
+const FITNESS_FIGURE = {
+  csvPath: 'fitness_frames_7/wandb_export_2026-03-29T10_13_49.847+02_00.csv',
+  pdfPath: 'fitness_frames_7/fitness_with_frames_7.pdf',
+  fallbackImage: 'fitness_frames_7/fitness_with_frames_7.png',
+  smoothWindow: 10,
+  checkpoints: [
+    { iteration: 20,  label: 'Shooter', src: 'fitness_frames_7/20.gif' },
+    { iteration: 60,  label: 'Iter 60', src: 'fitness_frames_7/60.gif' },
+    { iteration: 110, label: 'Iter 110', src: 'fitness_frames_7/110.gif' },
+    { iteration: 120, label: 'Iter 120', src: 'fitness_frames_7/120.gif' },
+    { iteration: 230, label: 'Amoeba', src: 'fitness_frames_7/230.gif' },
+    { iteration: 280, label: 'Early Divergence', src: 'fitness_frames_7/280.gif' },
+    { iteration: 295, label: 'Spiral Waves', src: 'fitness_frames_7/295.gif' },
+    { iteration: 310, label: 'Pirate World', src: 'fitness_frames_7/310.gif' },
+    { iteration: 350, label: 'Territorial Expansion', src: 'fitness_frames_7/350.gif' },
+    { iteration: 355, label: 'Symbiotic Partitioning', src: 'fitness_frames_7/355.gif' },
+    { iteration: 395, label: 'Alien', src: 'fitness_frames_7/395.gif' },
+    { iteration: 415, label: 'Coordinated Migration', src: 'fitness_frames_7/415.gif' },
+    { iteration: 460, label: 'Glider', src: 'fitness_frames_7/460.gif' }
+  ]
+};
+
+async function initFitnessFigure() {
+  const stage = document.getElementById('fitness-figure-stage');
+  const svg = stage?.querySelector('.fitness-chart');
+  if (!stage || !svg) return;
+
+  try {
+    if (!window.FITNESS_FIGURE_DATA) throw new Error('Missing inline fitness data');
+    renderFitnessFigure(stage, svg, window.FITNESS_FIGURE_DATA, FITNESS_FIGURE.checkpoints, FITNESS_FIGURE.smoothWindow);
+  } catch (error) {
+    console.error(error);
+    stage.innerHTML = `<img class="fitness-fallback" src="${FITNESS_FIGURE.fallbackImage}" alt="Fitness over meta-iterations with emergent dynamics" />`;
+  }
+}
+
+function centeredRollingMean(values, windowSize) {
+  const halfWindow = Math.floor(windowSize / 2);
+  return values.map((_, index) => {
+    const start = Math.max(0, index - halfWindow);
+    const end = Math.min(values.length, index + halfWindow + 1);
+    const slice = values.slice(start, end);
+    return slice.reduce((sum, value) => sum + value, 0) / slice.length;
+  });
+}
+
+function renderFitnessFigure(stage, svg, series, checkpoints, smoothWindow) {
+  const view = { width: 1000, height: 520, margin: { top: 32, right: 24, bottom: 54, left: 72 } };
+  const innerWidth = view.width - view.margin.left - view.margin.right;
+  const innerHeight = view.height - view.margin.top - view.margin.bottom;
+  const yMin = 0.1;
+  const yMax = 0.91;
+  const steps = series.steps;
+  const mean = centeredRollingMean(series.mean, smoothWindow);
+  const mins = centeredRollingMean(series.min, smoothWindow);
+  const maxs = centeredRollingMean(series.max, smoothWindow);
+  const xMin = steps[0];
+  const xMax = steps[steps.length - 1];
+
+  const xScale = (value) => view.margin.left + ((value - xMin) / (xMax - xMin)) * innerWidth;
+  const yScale = (value) => view.margin.top + ((yMax - value) / (yMax - yMin)) * innerHeight;
+
+  const makePath = (values) => values.map((value, index) => `${index === 0 ? 'M' : 'L'} ${xScale(steps[index]).toFixed(2)} ${yScale(value).toFixed(2)}`).join(' ');
+  const upper = steps.map((step, index) => `${xScale(step).toFixed(2)} ${yScale(maxs[index]).toFixed(2)}`);
+  const lower = steps.slice().reverse().map((step, reversedIndex) => {
+    const index = steps.length - 1 - reversedIndex;
+    return `${xScale(step).toFixed(2)} ${yScale(mins[index]).toFixed(2)}`;
+  });
+  const bandPath = `M ${upper[0]} L ${upper.slice(1).join(' L ')} L ${lower.join(' L ')} Z`;
+
+  svg.querySelector('#fitness-band').setAttribute('d', bandPath);
+  svg.querySelector('#fitness-line').setAttribute('d', makePath(mean));
+
+  const gridGroup = svg.querySelector('#fitness-grid');
+  const labelsGroup = svg.querySelector('#fitness-labels');
+  const annotationsGroup = svg.querySelector('#fitness-annotations');
+  const eventsLayer = stage.querySelector('#fitness-events');
+  const clipRect = svg.querySelector('#fitness-clip-rect');
+  const loading = stage.querySelector('#fitness-loading');
+
+  const xTicks = [0, 100, 200, 300, 400, 500].filter((tick) => tick >= xMin && tick <= xMax);
+  const yTicks = [0.1, 0.3, 0.5, 0.7, 0.9];
+
+  gridGroup.innerHTML = [
+    ...yTicks.map((tick) => `<line class="fitness-grid-line" x1="${view.margin.left}" y1="${yScale(tick).toFixed(2)}" x2="${(view.width - view.margin.right).toFixed(2)}" y2="${yScale(tick).toFixed(2)}"></line>`),
+    ...xTicks.map((tick) => `<line class="fitness-grid-line" x1="${xScale(tick).toFixed(2)}" y1="${view.margin.top}" x2="${xScale(tick).toFixed(2)}" y2="${(view.height - view.margin.bottom).toFixed(2)}"></line>`)
+  ].join('');
+
+  labelsGroup.innerHTML = `
+    ${yTicks.map((tick) => `<text class="fitness-axis-text" x="${view.margin.left - 14}" y="${(yScale(tick) + 4).toFixed(2)}" text-anchor="end">${tick.toFixed(1)}</text>`).join('')}
+    ${xTicks.map((tick) => `<text class="fitness-axis-text" x="${xScale(tick).toFixed(2)}" y="${view.height - 20}" text-anchor="middle">${tick}</text>`).join('')}
+    <text class="fitness-axis-label" x="${view.width / 2}" y="${view.height - 4}" text-anchor="middle">Meta-iteration</text>
+    <text class="fitness-axis-label" transform="translate(18 ${view.height / 2}) rotate(-90)" text-anchor="middle">Mean Fitness</text>
+    <text class="fitness-caption-note" x="${view.margin.left}" y="${view.margin.top - 10}">rolling mean smoothed (window = ${smoothWindow})</text>
+  `;
+
+  const range = Math.max(...mean) - Math.min(...mean);
+  const aboveOffset = 0.65;
+  const belowOffset = 0.75;
+
+  const eventData = checkpoints.map((checkpoint, index) => {
+    const pointIndex = steps.findIndex((step) => step >= checkpoint.iteration);
+    const safeIndex = pointIndex === -1 ? steps.length - 1 : pointIndex;
+    const yValue = mean[safeIndex];
+    const above = index % 2 === 0;
+    let eventYValue;
+
+    if (above) {
+      eventYValue = yValue + ((index === 0 ? aboveOffset + 0.25 : aboveOffset) * range);
+    } else {
+      eventYValue = yValue - ((index === 1 ? belowOffset + 0.05 : belowOffset) * range);
+    }
+
+    const x = xScale(checkpoint.iteration);
+    const curveY = yScale(yValue);
+    const cardY = yScale(eventYValue);
+    const threshold = (x - view.margin.left) / innerWidth;
+
+    return { ...checkpoint, x, curveY, cardY, threshold, above };
+  });
+
+  annotationsGroup.innerHTML = eventData.map((event) => `
+    <line class="fitness-leader" x1="${event.x.toFixed(2)}" y1="${event.curveY.toFixed(2)}" x2="${event.x.toFixed(2)}" y2="${event.cardY.toFixed(2)}"></line>
+    <circle class="fitness-point" cx="${event.x.toFixed(2)}" cy="${event.curveY.toFixed(2)}" r="4.5"></circle>
+  `).join('');
+
+  eventsLayer.innerHTML = eventData.map((event) => `
+    <div class="fitness-event ${event.above ? 'above' : 'below'}" data-threshold="${event.threshold.toFixed(4)}" style="left:${(event.x / view.width * 100).toFixed(2)}%; top:${(event.cardY / view.height * 100).toFixed(2)}%;">
+      <div class="fitness-event-card">
+        <img src="${event.src}" alt="Meta-iter ${event.iteration} · ${event.label}" loading="lazy" />
+        <span class="fitness-event-label">iter ${event.iteration}<br>${event.label}</span>
+      </div>
+    </div>
+  `).join('');
+
+  const events = Array.from(eventsLayer.querySelectorAll('.fitness-event'));
+  let animationFrameId = null;
+  let hasAnimated = false;
+
+  const animate = () => {
+    const duration = 9000;
+    let start = null;
+
+    const tick = (timestamp) => {
+      if (!start) start = timestamp;
+      const progress = Math.min((timestamp - start) / duration, 1);
+      clipRect.setAttribute('width', (view.width * progress).toFixed(2));
+
+      events.forEach((event) => {
+        event.classList.toggle('is-visible', progress >= Number(event.dataset.threshold));
+      });
+
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(tick);
+      }
+    };
+
+    clipRect.setAttribute('width', '0');
+    events.forEach((event) => event.classList.remove('is-visible'));
+    animationFrameId = window.requestAnimationFrame(tick);
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !hasAnimated) {
+        hasAnimated = true;
+        animate();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.35 });
+
+  observer.observe(stage);
+  loading?.classList.add('is-hidden');
+}
+
+function initPbtOverviewAnimation() {
+  const card = document.getElementById('pbt-overview-card');
+  if (!card) return;
+
+  const steps = Array.from(card.querySelectorAll('[data-step]'))
+    .sort((left, right) => Number(left.dataset.step) - Number(right.dataset.step));
+
+  let started = false;
+
+  const reveal = () => {
+    steps.forEach((element, index) => {
+      window.setTimeout(() => {
+        element.classList.add('is-visible');
+      }, index * 320);
+    });
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && !started) {
+        started = true;
+        reveal();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.28 });
+
+  observer.observe(card);
+}
+
+document.addEventListener('DOMContentLoaded', initFitnessFigure);
+document.addEventListener('DOMContentLoaded', initPbtOverviewAnimation);
+</script>
+
+</body>
+</html>
