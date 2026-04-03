@@ -26,7 +26,11 @@
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
 
   body {
     background: var(--bg);
@@ -902,6 +906,33 @@
 
   /* ── RESPONSIVE ── */
   @media (max-width: 768px) {
+    nav {
+      padding: 0.85rem 1rem;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      justify-content: center;
+    }
+    .nav-links {
+      width: 100%;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .container { padding: 0 1rem; }
+    .hero {
+      padding: 4.5rem 0 3.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 9vw, 2.8rem);
+      max-width: 14ch;
+    }
+    .hero-subtitle,
+    .affiliations {
+      line-height: 1.75;
+    }
+    .hero-links {
+      margin-bottom: 3rem;
+    }
     .abstract-grid, .gif-grid-2, .gif-grid-featured, .method-grid { grid-template-columns: 1fr; }
     .gif-grid-3, .timeline-grid { grid-template-columns: 1fr 1fr; }
     .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -916,6 +947,34 @@
     .pbt-legend { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
   @media (max-width: 480px) {
+    body {
+      font-size: 15px;
+    }
+    nav {
+      padding: 0.75rem 0.85rem;
+    }
+    .nav-links a,
+    .hero-subtitle,
+    .affiliations,
+    .section-label,
+    .pbt-overview-title {
+      letter-spacing: 0.08em;
+    }
+    .hero {
+      padding-top: 4rem;
+    }
+    .hero h1 {
+      font-size: clamp(1.55rem, 8.5vw, 2.2rem);
+      line-height: 1.12;
+    }
+    .authors {
+      font-size: 0.94rem;
+      line-height: 1.8;
+    }
+    .btn {
+      width: 100%;
+      text-align: center;
+    }
     .gif-grid-3, .timeline-grid { grid-template-columns: 1fr; }
     .fitness-figure-toolbar { align-items: flex-start; }
     .fitness-figure-stage { aspect-ratio: 1 / 1.15; }
@@ -962,7 +1021,7 @@
 <!-- HERO -->
 <section class="hero">
   <div class="container">
-    <h1><em>Evolving Many Worlds</em><br/>Open-Ended Discovery in</br>Petri Dish NCA<br/>via Population-Based Training</h1>
+    <h1><em>Evolving Many Worlds</em><br />Open-Ended Discovery in<br />Petri Dish NCA<br />via Population-Based Training</h1>
     <p class="hero-subtitle">Open-Ended Discovery &nbsp;·&nbsp; Neural Cellular Automata &nbsp;·&nbsp; Emergent Dynamics</p>
     <p class="authors">
       <strong>Uljad Berdica</strong><sup>1*</sup>,&nbsp;
