@@ -71,7 +71,7 @@
   .blob-3 { width: 400px; height: 400px; background: #ff6b6b; bottom: 10%; left: 30%; }
 
   /* ── LAYOUT ── */
-  .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
+  .container { max-width: 1040px; margin: 0 auto; padding: 0 2rem; position: relative; z-index: 1; }
 
   /* ── NAV ── */
   nav {
@@ -127,9 +127,9 @@
   }
   .hero h1 {
     font-family: var(--serif);
-    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-size: clamp(2rem, 4.4vw, 3.3rem);
     line-height: 1.15;
-    max-width: 1200px;
+    max-width: 1000px;
     margin: 0 auto 1.2rem;
     letter-spacing: -0.01em;
   }
@@ -139,20 +139,20 @@
   }
   .hero-subtitle {
     font-family: var(--mono);
-    font-size: 0.8rem;
+    font-size: 0.76rem;
     color: var(--accent3);
     letter-spacing: 0.12em;
     margin-bottom: 2.5rem;
     text-transform: uppercase;
   }
   .authors {
-    font-size: 1rem;
+    font-size: 0.96rem;
     color: var(--muted);
     margin-bottom: 0.6rem;
   }
   .authors strong { color: var(--text); font-weight: 500; }
   .affiliations {
-    font-size: 0.82rem;
+    font-size: 0.78rem;
     color: var(--muted);
     margin-bottom: 2.8rem;
     font-family: var(--mono);
@@ -195,7 +195,7 @@
     flex: 1;
     width: 0;
     min-width: 0;
-    height: 130px;
+    height: 118px;
     object-fit: cover;
     display: block;
     transition: flex 0.5s ease, filter 0.3s;
@@ -264,13 +264,13 @@
   }
   .section-title {
     font-family: var(--serif);
-    font-size: 2rem;
+    font-size: 1.8rem;
     margin-bottom: 0.6rem;
     letter-spacing: -0.01em;
   }
   .section-desc {
     color: var(--muted);
-    font-size: 0.92rem;
+    font-size: 0.88rem;
     max-width: none;
     margin-bottom: 3rem;
     line-height: 1.7;
@@ -902,6 +902,25 @@
     height: 1px;
     background: linear-gradient(to right, transparent, var(--border), transparent);
     margin: 1rem 0;
+  }
+
+  @media (min-width: 1024px) {
+    body {
+      font-size: 15.5px;
+    }
+    nav {
+      padding: 0.8rem 1.6rem;
+    }
+    .hero {
+      padding: 5.75rem 0 4.25rem;
+    }
+    .abstract-section,
+    .gallery-section,
+    .timeline-section,
+    .method-section,
+    .citation-section {
+      padding: 4rem 0;
+    }
   }
 
   /* ── RESPONSIVE ── */
