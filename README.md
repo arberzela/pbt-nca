@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="gifs/shooter.png" alt="PBT-NCA" width="100">
+  <img src="gifs/emergent_alien.png" alt="PBT-NCA" width="180">
 </p>
 
 
