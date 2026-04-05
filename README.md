@@ -1,8 +1,16 @@
-# Population-Based Training of Petri Dish Neural Cellular Automata (PBT-NCA)
 
 <p align="center">
-  <img src="gifs/shooter.png" alt="PBT-NCA" width="180">
+  <img src="gifs/shooter.png" alt="PBT-NCA" width="100">
 </p>
+
+
+<h1 align="center">Population-Based Training of Petri Dish Neural Cellular Automata (PBT-NCA)</h1>
+
+<p align="center">
+<a href="https://https://pbt-nca.github.io//">
+        <img src="https://img.shields.io/badge/Website-Visit-blueviolet.svg" /></a>
+</p>
+
 
 **Website:** [arberzela.github.io/pbt-nca](https://arberzela.github.io/pbt-nca/)
 
