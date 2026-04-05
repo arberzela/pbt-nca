@@ -13,9 +13,6 @@
         <img src="https://img.shields.io/badge/License-MIT-yellow" /></a>
 </p>
 
-
-**Website:** [arberzela.github.io/pbt-nca](https://arberzela.github.io/pbt-nca/)
-
 PBT-NCA is a meta-optimization framework for **Petri Dish Neural Cellular Automata (PD-NCAs)** that turns population-based training into an open-ended discovery process. Instead of optimizing a stationary objective, it applies **novelty-driven selection pressure at two timescales** so that populations of competitive worlds keep producing new behaviors and structures over long horizons.
 
 ## 💡 Method TL;DR
