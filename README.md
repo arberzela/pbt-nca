@@ -31,8 +31,6 @@ This produces emergent phenomena such as gliders, shooters, amoebas, colonies, a
 
 ## ✨ Selected emergent dynamics
 
-_Click any GIF to open it directly._
-
 <!-- markdownlint-disable MD033 -->
 <table>
   <tr>
