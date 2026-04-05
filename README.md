@@ -24,51 +24,51 @@ _Click any GIF to open it directly._
   <tr>
     <td valign="top" width="33%">
       <strong>Amoeba</strong><br>
-      <a href="website/gifs/amoeba.gif"><img src="website/gifs/amoeba.gif" alt="Amoeba" width="100%"></a><br>
+      <a href="gifs/amoeba.gif"><img src="gifs/amoeba.gif" alt="Amoeba" width="100%"></a><br>
       Fluid, shape-shifting macro-structures with coordinated movement.
     </td>
     <td valign="top" width="33%">
       <strong>Glider</strong><br>
-      <a href="website/gifs/glider.gif"><img src="website/gifs/glider.gif" alt="Glider" width="100%"></a><br>
+      <a href="gifs/glider.gif"><img src="gifs/glider.gif" alt="Glider" width="100%"></a><br>
       Persistent traveling waves that self-propagate across the grid.
     </td>
     <td valign="top" width="33%">
       <strong>Shooter</strong><br>
-      <a href="website/gifs/shooter.gif"><img src="website/gifs/shooter.gif" alt="Shooter" width="100%"></a><br>
+      <a href="gifs/shooter.gif"><img src="gifs/shooter.gif" alt="Shooter" width="100%"></a><br>
       Stable territorial clusters that emit projectile-like structures.
     </td>
   </tr>
   <tr>
     <td valign="top" width="33%">
       <strong>Ant Colony</strong><br>
-      <a href="website/gifs/ants.gif"><img src="website/gifs/ants.gif" alt="Ant Colony" width="100%"></a><br>
+      <a href="gifs/ants.gif"><img src="gifs/ants.gif" alt="Ant Colony" width="100%"></a><br>
       Decentralized, trail-like coordination emerging from local interaction rules.
     </td>
     <td valign="top" width="33%">
       <strong>Colony</strong><br>
-      <a href="website/gifs/colony.gif"><img src="website/gifs/colony.gif" alt="Colony" width="100%"></a><br>
+      <a href="gifs/colony.gif"><img src="gifs/colony.gif" alt="Colony" width="100%"></a><br>
       Distributed territorial clusters with distant colonization.
     </td>
     <td valign="top" width="33%">
       <strong>Motherboard</strong><br>
-      <a href="website/gifs/spaceship_motherboard.gif"><img src="website/gifs/spaceship_motherboard.gif" alt="Motherboard" width="100%"></a><br>
+      <a href="gifs/spaceship_motherboard.gif"><img src="gifs/spaceship_motherboard.gif" alt="Motherboard" width="100%"></a><br>
       Highly structured replicating entities with intricate internal substructure.
     </td>
   </tr>
   <tr>
     <td valign="top" width="33%">
       <strong>JAXLife Dynamics</strong><br>
-      <a href="website/gifs/jaxlife.gif"><img src="website/gifs/jaxlife.gif" alt="JAXLife Dynamics" width="100%"></a><br>
+      <a href="gifs/jaxlife.gif"><img src="gifs/jaxlife.gif" alt="JAXLife Dynamics" width="100%"></a><br>
       Large-scale simulation dynamics resembling JAXLife.
     </td>
     <td valign="top" width="33%">
       <strong>Spiral Waves</strong><br>
-      <a href="website/gifs/spirals.gif"><img src="website/gifs/spirals.gif" alt="Spiral Waves" width="100%"></a><br>
+      <a href="gifs/spirals.gif"><img src="gifs/spirals.gif" alt="Spiral Waves" width="100%"></a><br>
       Rotating wavefronts and cyclic spatial organization emerging over time.
     </td>
     <td valign="top" width="33%">
       <strong>Open-Ended Rollout</strong><br>
-      <a href="website/gifs/pdnca2.gif"><img src="website/gifs/pdnca2.gif" alt="Multi-shapes" width="100%"></a><br>
+      <a href="gifs/pdnca2.gif"><img src="gifs/pdnca2.gif" alt="Multi-shapes" width="100%"></a><br>
       Multiple shapes and dynamics emerging in a single substrate.
     </td>
   </tr>
