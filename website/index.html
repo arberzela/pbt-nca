@@ -1139,16 +1139,7 @@
     <div class="abstract-grid">
       <div class="abstract-text">
         <p>
-          We introduce <strong>PBT-NCA</strong>, a meta-optimization framework that evolves Petri Dish Neural Cellular Automata (PD-NCAs) 
-          using Population-Based Training (PBT) with a non-stationary fitness signal rewarding novelty both within each
-          substrate and across all of them. Driven purely by competitive evolutionary pressure, the
-          system spontaneously generates a plethora of emergent lifelike phenomena with behavioral
-          and structural novelty over extended horizons—a sign of true open-endedness.
-          The substrate autonomously discovers diverse morphological survival strategies: highly
-          regular coordinated periodic movements; spore-like scattering; and symbiotic partitioning
-          where stable macro-structures gradually encapsulate smaller ones. By actively avoiding
-          monocultures and dead states, PBT-NCA maintains effective complexity precisely at the
-          <em>"edge of chaos"</em>.
+          PBT-NCA is a meta-optimization framework for evolving Petri Dish Neural Cellular Automata under novelty-driven competitive pressure. Instead of collapsing into static order or noise, the system continually discovers new lifelike behaviors—ranging from coordinated motion and scattering to colonization and symbiotic partitioning. By rewarding diversity within and across worlds, PBT-NCA sustains open-ended dynamics at the edge of chaos.
         </p>
       </div>
     </div>
@@ -1201,14 +1192,14 @@
         <div class="gif-caption">
           <div class="tag tag-blue">Emerging · 7 NCAs</div>
           <h3>Colony</h3>
-          <p>Distributed cluster networks that exhibit stable territorial partitioning while maintaining active intra-colony communication via cell exchange.</p>
+          <p> A macroscopic entity (red agent) emits a small cluster of cells across the substrate, executing spatial colonization via a decentralized replicating strategy.</p>
         </div>
       </div>
       <div class="gif-card">
-        <img src="gifs/ants.gif" alt="Ant Colony" loading="lazy" />
+        <img src="gifs/ants.gif" alt="Ant Locomotion" loading="lazy" />
         <div class="gif-caption">
           <div class="tag tag-green">Meta-iter 370 · 3 NCAs</div>
-          <h3>Ant Colony</h3>
+          <h3>Ant Locomotion</h3>
           <p>Decentralized foraging-like behavior: agents follow stigmergic-style pheromone trails emerging purely from local NCA gradient dynamics.</p>
         </div>
       </div>
@@ -1221,15 +1212,16 @@
         <div class="gif-caption">
           <div class="tag tag-purple">Meta-iter 20 · 3 NCAs (Extended Search Space)</div>
           <h3>Spaceship / Motherboard</h3>
-          <p>Highly structured, periodically replicating entities with internal substructure—reminiscent of von Neumann universal constructors but arising from gradient-based learning alone.</p>
+          <p>Local interactions producing highly structured, periodically replicating entities with internal substructure, reminiscent of the computational richness long associated with cellular automata.</p>
         </div>
       </div>
+      </div>
       <div class="gif-card wide">
-        <img src="gifs/jaxlife.gif" alt="JAXLife" loading="lazy" />
+        <img src="gifs/jaxlife.gif" alt="Archipelago" loading="lazy" />
         <div class="gif-caption">
-          <div class="tag tag-pink">JAX Implementation</div>
-          <h3>JAXLife Dynamics</h3>
-          <p>Full-scale simulation harnessing JAX-accelerated NCA rollouts, demonstrating the compute efficiency enabling 500 meta-iterations with 30 parallel worlds.</p>
+          <div class="tag tag-pink">Meta-iter 125 · 3 NCAs</div>
+          <h3>Archipelago</h3>
+          <p>A restless mosaic of lifeforms that pulse, fragment, and reclaim territory in real time, forming an archipelago-like pattern.</p>
         </div>
       </div>
     </div>
@@ -1242,8 +1234,8 @@
     <div class="section-label">Evolution Timeline</div>
     <h2 class="section-title">Open-Ended Novelty Generation Over Meta-Iterations</h2>
     <p class="section-desc">
-      This animated figure recreates the fitness plot from the paper: the smoothed population
-      fitness grows across meta-iterations while representative emergent worlds appear at the
+      This animated figure recreates the composite novelty score plot from the paper: the smoothed population
+      novelty score grows across meta-iterations while representative emergent worlds appear at the
       moments they enter the evolutionary record.
     </p>
     <figure class="fitness-figure-card">
@@ -1272,7 +1264,7 @@
         <div class="fitness-loading" id="fitness-loading">Loading animated fitness figure…</div>
       </div>
       <figcaption class="figure-note">
-        PBT-NCA evolving a population of 30 PD-NCAs worlds, each with 7 NCA agents competing for territory. We plot the fitness function over meta-iterations and rollouts from the highest scoring world. Novel dynamics emerge from agentic competition in an open-ended progression.
+        PBT-NCA evolving a population of 30 PD-NCAs worlds, each with 7 NCA agents competing for territory. We plot the composite novelty score function over meta-iterations and rollouts from the highest scoring world. Novel dynamics emerge from agentic competition in an open-ended progression.
       </figcaption>
     </figure>
   </div>
@@ -1282,7 +1274,7 @@
 <section class="method-section" id="method">
   <div class="container">
     <div class="section-label">Method Overview</div>
-    <h2 class="section-title">PBT-NCA Framework</h2>
+    <h2 class="section-title">PBT-NCA Meta-Optimization Steps</h2>
     <p class="section-desc">
       A meta-optimization loop that transforms standard population-based training into an
       open-ended regime discovery engine by replacing stationary fitness with novelty-driven
@@ -1358,7 +1350,7 @@
             </div>
           </div>
 
-          <div class="pbt-arrow-divider" data-step="3">rank by novelty-driven fitness</div>
+          <div class="pbt-arrow-divider" data-step="3">rank by novelty-driven composite score</div>
 
           <div class="pbt-row" data-step="4">
             <div class="pbt-stage-label">2. Archive Update</div>
@@ -1370,7 +1362,7 @@
             </div>
           </div>
 
-          <div class="pbt-arrow-divider" data-step="5">replace the lowest performers</div>
+          <div class="pbt-arrow-divider" data-step="5">replace the least novel</div>
 
           <div class="pbt-row" data-step="6">
             <div class="pbt-stage-label">3. Exploit–Explore</div>
@@ -1620,7 +1612,7 @@ function renderFitnessFigure(stage, svg, series, checkpoints, smoothWindow) {
     ${yTicks.map((tick) => `<text class="fitness-axis-text" x="${view.margin.left - 14}" y="${(yScale(tick) + 4).toFixed(2)}" text-anchor="end">${tick.toFixed(1)}</text>`).join('')}
     ${xTicks.map((tick) => `<text class="fitness-axis-text" x="${xScale(tick).toFixed(2)}" y="${view.height - 20}" text-anchor="middle">${tick}</text>`).join('')}
     <text class="fitness-axis-label" x="${view.width / 2}" y="${view.height - 4}" text-anchor="middle">Meta-iteration</text>
-    <text class="fitness-axis-label" transform="translate(18 ${view.height / 2}) rotate(-90)" text-anchor="middle">Mean Fitness</text>
+    <text class="fitness-axis-label" transform="translate(18 ${view.height / 2}) rotate(-90)" text-anchor="middle">Mean Composite Novelty Score</text>
     <text class="fitness-caption-note" x="${view.margin.left}" y="${view.margin.top - 10}">rolling mean smoothed (window = ${smoothWindow})</text>
   `;
 
