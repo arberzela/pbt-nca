@@ -1,0 +1,24 @@
+[project]
+name = "pbt-nca"
+version = "0.1.0"
+description = "Population-Based Training of Petri Dish Neural Cellular Automata"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.0",
+    "numpy>=1.24",
+    "einops>=0.7",
+    "wandb>=0.15",
+    "pillow>=9.0",
+    "imageio>=2.28",
+    "transformers>=4.36",
+    "huggingface-hub>=0.20",
+]
+
+[project.urls]
+Homepage = "https://arberzela.github.io/pbt-nca/"
+Repository = "https://github.com/arberzela/pbt-nca"
+
+[tool.uv]
+# By default, uv installs a CPU build of PyTorch.
+# On GPU clusters, run scripts/ensure_cuda_torch.sh after `uv sync` to
+# upgrade to a CUDA build automatically.
