@@ -163,7 +163,6 @@ sbatch scripts/paper_pbt_combined_median_3seeds.sbatch
 |--------|-----------|-----------------|
 | `paper_pbt_combined_median_3seeds.sbatch` | PBT (Combined Median) | Novelty + DINOv2 cosine median, combined |
 | `paper_pbt_dino_median_3seeds.sbatch` | PBT (DINOv2 Median) | DINOv2 cosine median ranking |
-| `paper_pbt_dino_elo_3seeds.sbatch` | PBT (DINOv2 ELO) | DINOv2 cosine ELO tournament |
 | `paper_pbt_vlm_prompt_3seeds.sbatch` | PBT (VLM Prompt) | VLM prompt-guided selection (CLIP) |
 | `paper_pbt_handcrafted_3seeds.sbatch` | PBT (Handcrafted) | Handcrafted behavioral descriptors |
 | `paper_rs_baseline_3seeds.sbatch` | Random Resampling | No selection; uniform hyperparameter resampling |
@@ -189,10 +188,7 @@ Paper experiments use `configs/slurm_h100_pbt_scale_small.json` as the base conf
 | `slurm_h100_pbt_scale_small.json` | Full-scale paper experiments (128×128 grid, PBT) |
 | `slurm_h100_pbt_scale.json` | Larger-scale variant (256×256 grid) |
 | `slurm_h100_pdnca_scale_small.json` | Baseline PD-NCA config (no PBT) |
-| `example.json` | Example config for local/interactive runs |
 | `tiny-config.json` | Minimal config for quick CPU testing (no PBT) |
-| `pbt-tiny.json` | Minimal PBT config for quick CPU testing |
-| `pbt-interesting.json` | Mid-scale interactive PBT config |
 
 Any parameter not specified in a config defaults to the values in `src/config.py`.
 
