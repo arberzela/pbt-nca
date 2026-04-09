@@ -176,8 +176,11 @@ selection, isolating the contribution of selection pressure.
 
 ### Resource profile
 
-Each job requests: 1 GPU · 8 CPUs · 300 GB RAM · 24 h wall time. The scripts were tuned for H100
-GPUs. Adjust `--mem` and `--time` as needed for your hardware.
+Everything can be reproduced with only 1 GPU. 
+
+You can fully reproduce all the patterns in the paper if you use the same seeds as the scripts and run on an NVIDIA GH200. 
+
+Adjust `--mem` and `--time` as needed.
 
 ## ⚙️ Configuration
 
