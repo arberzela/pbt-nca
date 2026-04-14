@@ -209,10 +209,13 @@ Key PBT parameters:
 If you use this project, please cite:
 
 ```bibtex
-@inproceedings{berdica2026pbtnca,
-  title     = {Evolving Many Worlds: Towards Open-Ended Discovery in Petri Dish NCA via Population-Based Training},
-  author    = {Berdica, Uljad and Foerster, Jakob and Hutter, Frank and Zela, Arber},
-  booktitle = {TODO: add venue},
-  year      = {2026}
+@misc{berdica2026pbtnca,
+      title={Evolving Many Worlds: Towards Open-Ended Discovery in Petri Dish NCA via Population-Based Training}, 
+      author={Uljad Berdica and Jakob Foerster and Frank Hutter and Arber Zela},
+      year={2026},
+      eprint={2604.11248},
+      archivePrefix={arXiv},
+      primaryClass={cs.NE},
+      url={https://arxiv.org/abs/2604.11248}, 
 }
 ```
