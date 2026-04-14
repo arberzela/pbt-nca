@@ -9,6 +9,8 @@
 <p align="center">
 <a href="https://pbt-nca.github.io/">
         <img src="https://img.shields.io/badge/Website-Visit-blueviolet.svg" /></a>
+<a href= "https://arxiv.org/abs/2604.11248">
+        <img src="https://img.shields.io/badge/arXiv-2604.11248-b31b1b.svg" /></a>
 <a href= "https://github.com/arberzela/pbt-nca/blob/main/LICENSE">
         <img src="https://img.shields.io/badge/License-MIT-yellow" /></a>
 </p>
